@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Evaluation, EvaluationDocument } from './evaluation.schema';
-import { CreateEvaluationDto } from './dto/evaluation.dto';
+import { CreateEvaluationDto, UpdateEvaluationDto } from './dto/evaluation.dto';
 
 @Injectable()
 export class EvaluationsRepository {
@@ -25,5 +25,17 @@ export class EvaluationsRepository {
 
   async findByPair(alternativeId: string, criterionId: string): Promise<EvaluationDocument | null> {
     return this.evaluationModel.findOne({ alternativeId, criterionId }).exec();
+  }
+
+  async findById(id: string): Promise<EvaluationDocument | null> {
+    return this.evaluationModel.findById(id).exec();
+  }
+
+  async update(id: string, dto: UpdateEvaluationDto): Promise<EvaluationDocument | null> {
+    return this.evaluationModel
+      .findByIdAndUpdate(id, { $set: dto }, { new: true })
+      .populate('alternativeId', 'name description')
+      .populate('criterionId', 'name type description')
+      .exec();
   }
 }

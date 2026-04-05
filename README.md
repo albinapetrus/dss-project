@@ -1,86 +1,54 @@
-# DSS Core Framework
+# СППР: система підтримки прийняття рішень
 
-A Decision Support System (DSS) built with NestJS, MongoDB Atlas, and Mongoose.
+Програмний продукт для багатокритеріального вибору альтернатив (демо-задача: **платформа e-commerce**). Реалізує модель предметної області, матрицю оцінювання, аналітичний блок із **вагами критеріїв**, ранжування, явний вибір найкращої альтернативи та **пояснення** результату. Доступ: **REST API** (NestJS) та **веб-інтерфейс** (React + Vite у каталозі `frontend/`).
 
-## Setup
+## Репозиторій
+
+Після розміщення коду на GitHub/GitLab додайте посилання тут і в `docs/DSS_DOKUMENTATSIYA_UK.md` (розділ 5).
+
+## Вимоги
+
+- Node.js 18+
+- MongoDB (локально або URI у хмарі)
+
+## Запуск
 
 ```bash
 npm install
+# за потреби: export MONGODB_URI=mongodb://127.0.0.1:27017/dss
+npm run seed      # демо: 3 альтернативи, 3 критерії з вагами, повна матриця
+npm run start:dev # API: http://localhost:3000/api/v1
 ```
 
-Set your MongoDB Atlas URI in a `.env` file:
+### Фронтенд
 
-```
-MONGODB_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/dss
-```
-
-## Running
+У другому терміналі:
 
 ```bash
-# Development
-npm run start:dev
-
-# Production
-npm run build && npm run start:prod
+cd frontend && npm install && npm run dev
 ```
 
-## Project Structure
+Відкрийте **http://localhost:5173** — інтерфейс проксує запити на API (`/api/v1` → порт 3000). Переконайтеся, що MongoDB запущена й за потреби виконано `npm run seed`.
 
-```
-src/
-├── alternatives/        # Alternatives CRUD (Controller / Service / Repository)
-│   ├── dto/
-│   ├── alternative.schema.ts
-│   ├── alternatives.repository.ts
-│   ├── alternatives.service.ts
-│   ├── alternatives.controller.ts
-│   └── alternatives.module.ts
-│
-├── criteria/            # Criteria CRUD (with maximize/minimize type)
-│   ├── dto/
-│   ├── criterion.schema.ts
-│   ├── criteria.repository.ts
-│   ├── criteria.service.ts
-│   ├── criteria.controller.ts
-│   └── criteria.module.ts
-│
-├── evaluations/         # Evaluation Matrix (Alternative × Criterion → Value)
-│   ├── dto/
-│   ├── evaluation.schema.ts
-│   ├── evaluations.repository.ts
-│   ├── evaluations.service.ts
-│   ├── evaluations.controller.ts
-│   └── evaluations.module.ts
-│
-├── analytics/           # Analytics placeholder — future MCDA algorithms
-│   ├── analytics.service.ts
-│   ├── analytics.controller.ts
-│   └── analytics.module.ts
-│
-├── app.module.ts
-└── main.ts
-```
+Якщо збираєте статичний `frontend/dist` і віддаєте його окремо, задайте повний URL API: `VITE_API_BASE=https://ваш-хост/api/v1 npm run build`.
 
-## API Base URL
+Корисні запити (без браузера):
 
-```
-http://localhost:3000/api/v1
-```
+- `GET /api/v1/analytics/matrix` — матриця оцінювання
+- `GET /api/v1/analytics/rankings` — рейтинг і **bestAlternative** (зважені ваги з БД)
+- `GET /api/v1/analytics/rankings?strategy=equal_minmax` — та сама нормалізація, **рівні ваги** (другий метод згортки)
 
-## Endpoints
+## Документація до захисту
 
-| Method | URL | Description |
-|--------|-----|-------------|
-| POST | /alternatives | Create alternative |
-| GET | /alternatives | List all alternatives |
-| GET | /alternatives/:id | Get alternative by ID |
-| PATCH | /alternatives/:id | Update alternative |
-| DELETE | /alternatives/:id | Delete alternative |
-| POST | /criteria | Create criterion |
-| GET | /criteria | List all criteria |
-| GET | /criteria/:id | Get criterion by ID |
-| PATCH | /criteria/:id | Update criterion |
-| DELETE | /criteria/:id | Delete criterion |
-| POST | /evaluations | Assign value to Alt×Criterion pair |
-| GET | /evaluations | Get full evaluation matrix |
-| GET | /analytics/rankings | Rankings stub (ready for integration) |
+Повний опис архітектури, ER-діаграма, формалізація множин A і C, приклад даних, **таблиця відповідності всім 9 критеріям оцінювання + бонусам** (§0.3–0.5), місце для URL репозиторію:
+
+**[docs/DSS_DOKUMENTATSIYA_UK.md](docs/DSS_DOKUMENTATSIYA_UK.md)**
+
+## Структура системи
+
+- **Controller → Service → Repository** для `alternatives`, `criteria`, `evaluations`
+- Модуль **`analytics`** — обчислення інтегральної оцінки, ранжування, пояснення (без прямого залежання від чужих репозиторіїв)
+
+## Ліцензія
+
+Навчальний проєкт.

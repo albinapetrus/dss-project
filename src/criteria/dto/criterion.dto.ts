@@ -1,4 +1,5 @@
-import { IsString, IsNotEmpty, IsOptional, IsEnum } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsEnum, IsNumber, Min, Max } from 'class-validator';
+import { Type } from 'class-transformer';
 import { CriterionType } from '../criterion.schema';
 
 export class CreateCriterionDto {
@@ -12,6 +13,13 @@ export class CreateCriterionDto {
   @IsString()
   @IsOptional()
   description?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0.0001)
+  @Max(1_000_000)
+  weight?: number;
 }
 
 export class UpdateCriterionDto {
@@ -26,4 +34,11 @@ export class UpdateCriterionDto {
   @IsString()
   @IsOptional()
   description?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0.0001)
+  @Max(1_000_000)
+  weight?: number;
 }

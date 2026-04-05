@@ -1,6 +1,8 @@
-import { Controller, Get, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller, Get, Post, Patch, Param, Body, HttpCode, HttpStatus,
+} from '@nestjs/common';
 import { EvaluationsService } from './evaluations.service';
-import { CreateEvaluationDto } from './dto/evaluation.dto';
+import { CreateEvaluationDto, UpdateEvaluationDto } from './dto/evaluation.dto';
 
 @Controller('evaluations')
 export class EvaluationsController {
@@ -15,5 +17,10 @@ export class EvaluationsController {
   @Get()
   findAll() {
     return this.service.findAll();
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() dto: UpdateEvaluationDto) {
+    return this.service.update(id, dto);
   }
 }

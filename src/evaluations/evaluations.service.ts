@@ -1,6 +1,6 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { EvaluationsRepository } from './evaluations.repository';
-import { CreateEvaluationDto } from './dto/evaluation.dto';
+import { CreateEvaluationDto, UpdateEvaluationDto } from './dto/evaluation.dto';
 
 @Injectable()
 export class EvaluationsService {
@@ -18,5 +18,11 @@ export class EvaluationsService {
 
   async findAll() {
     return this.repo.findAll();
+  }
+
+  async update(id: string, dto: UpdateEvaluationDto) {
+    const updated = await this.repo.update(id, dto);
+    if (!updated) throw new NotFoundException(`Evaluation #${id} not found`);
+    return updated;
   }
 }

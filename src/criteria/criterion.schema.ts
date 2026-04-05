@@ -18,6 +18,10 @@ export class Criterion {
 
   @Prop({ trim: true })
   description: string;
+
+  /** Вага критерію в аналітиці (чим більше — тим важливіша вісь). За замовчуванням 1. */
+  @Prop({ type: Number, default: 1, min: 0.0001 })
+  weight: number;
 }
 
 export const CriterionSchema = SchemaFactory.createForClass(Criterion);

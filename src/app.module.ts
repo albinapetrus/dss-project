@@ -7,9 +7,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      process.env.MONGODB_URI || 'mongodb+srv://<user>:<password>@cluster.mongodb.net/dss',
-    ),
+    MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/dss'),
     AlternativesModule,
     CriteriaModule,
     EvaluationsModule,
