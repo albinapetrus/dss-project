@@ -32,6 +32,9 @@ let EvaluationsService = class EvaluationsService {
             throw new common_1.NotFoundException(`Evaluation #${id} not found`);
         return updated;
     }
+    async upsertPair(alternativeId, criterionId, value) {
+        return this.repo.upsertByPair(alternativeId, criterionId, value);
+    }
 };
 exports.EvaluationsService = EvaluationsService;
 exports.EvaluationsService = EvaluationsService = __decorate([

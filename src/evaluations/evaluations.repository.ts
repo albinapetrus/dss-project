@@ -38,4 +38,20 @@ export class EvaluationsRepository {
       .populate('criterionId', 'name type description')
       .exec();
   }
+
+  async upsertByPair(
+    alternativeId: string,
+    criterionId: string,
+    value: number,
+  ): Promise<EvaluationDocument> {
+    return this.evaluationModel
+      .findOneAndUpdate(
+        { alternativeId, criterionId },
+        { $set: { alternativeId, criterionId, value } },
+        { upsert: true, new: true, setDefaultsOnInsert: true },
+      )
+      .populate('alternativeId', 'name description')
+      .populate('criterionId', 'name type description')
+      .exec() as Promise<EvaluationDocument>;
+  }
 }

@@ -6,4 +6,5 @@ export declare class EvaluationsService {
     create(dto: CreateEvaluationDto): Promise<import("./evaluation.schema").EvaluationDocument>;
     findAll(): Promise<import("./evaluation.schema").EvaluationDocument[]>;
     update(id: string, dto: UpdateEvaluationDto): Promise<import("./evaluation.schema").EvaluationDocument>;
+    upsertPair(alternativeId: string, criterionId: string, value: number): Promise<import("./evaluation.schema").EvaluationDocument>;
 }

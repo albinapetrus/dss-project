@@ -20,6 +20,26 @@ export class CreateCriterionDto {
   @Min(0.0001)
   @Max(1_000_000)
   weight?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  scaleMin?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  scaleMax?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  thresholdMin?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  thresholdMax?: number;
 }
 
 export class UpdateCriterionDto {
@@ -41,4 +61,24 @@ export class UpdateCriterionDto {
   @Min(0.0001)
   @Max(1_000_000)
   weight?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  scaleMin?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  scaleMax?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  thresholdMin?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  thresholdMax?: number;
 }

@@ -15,7 +15,18 @@ export function CriteriaPanel({ onChanged }: { onChanged?: () => void }) {
   const [type, setType] = useState<CriterionType>('maximize')
   const [description, setDescription] = useState('')
   const [weight, setWeight] = useState('1')
+  const [scaleMin, setScaleMin] = useState('')
+  const [scaleMax, setScaleMax] = useState('')
+  const [thresholdMin, setThresholdMin] = useState('')
+  const [thresholdMax, setThresholdMax] = useState('')
   const [editing, setEditing] = useState<Criterion | null>(null)
+
+  function optNum(s: string): number | undefined {
+    const t = s.trim()
+    if (t === '') return undefined
+    const n = parseFloat(t.replace(',', '.'))
+    return Number.isNaN(n) ? undefined : n
+  }
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -47,10 +58,18 @@ export function CriteriaPanel({ onChanged }: { onChanged?: () => void }) {
         type,
         description: description.trim() || undefined,
         weight: w,
+        scaleMin: optNum(scaleMin),
+        scaleMax: optNum(scaleMax),
+        thresholdMin: optNum(thresholdMin),
+        thresholdMax: optNum(thresholdMax),
       })
       setName('')
       setDescription('')
       setWeight('1')
+      setScaleMin('')
+      setScaleMax('')
+      setThresholdMin('')
+      setThresholdMax('')
       setType('maximize')
       await load()
       onChanged?.()
@@ -73,6 +92,10 @@ export function CriteriaPanel({ onChanged }: { onChanged?: () => void }) {
         type: editing.type,
         description: editing.description?.trim() || undefined,
         weight: w,
+        scaleMin: editing.scaleMin,
+        scaleMax: editing.scaleMax,
+        thresholdMin: editing.thresholdMin,
+        thresholdMax: editing.thresholdMax,
       })
       setEditing(null)
       await load()
@@ -130,6 +153,20 @@ export function CriteriaPanel({ onChanged }: { onChanged?: () => void }) {
             placeholder="Як інтерпретувати критерій"
           />
         </label>
+        <label className="full-width">
+          Шкала (опційно): scaleMin — scaleMax для лінійного відображення перед мінімаксом
+          <span className="inline-pair">
+            <input placeholder="min" value={scaleMin} onChange={(e) => setScaleMin(e.target.value)} />
+            <input placeholder="max" value={scaleMax} onChange={(e) => setScaleMax(e.target.value)} />
+          </span>
+        </label>
+        <label className="full-width">
+          Пороги сирої оцінки (опційно): альтернатива поза діапазоном відсікається
+          <span className="inline-pair">
+            <input placeholder="thresholdMin" value={thresholdMin} onChange={(e) => setThresholdMin(e.target.value)} />
+            <input placeholder="thresholdMax" value={thresholdMax} onChange={(e) => setThresholdMax(e.target.value)} />
+          </span>
+        </label>
         <button type="submit" className="btn primary" disabled={loading}>
           Додати
         </button>
@@ -174,6 +211,56 @@ export function CriteriaPanel({ onChanged }: { onChanged?: () => void }) {
               onChange={(e) => setEditing({ ...editing, description: e.target.value })}
             />
           </label>
+          <label>
+            scaleMin / scaleMax
+            <span className="inline-pair">
+              <input
+                placeholder="min"
+                value={editing.scaleMin !== undefined && !Number.isNaN(editing.scaleMin) ? String(editing.scaleMin) : ''}
+                onChange={(e) => {
+                  const v = e.target.value.trim()
+                  setEditing({ ...editing, scaleMin: v === '' ? undefined : parseFloat(v) })
+                }}
+              />
+              <input
+                placeholder="max"
+                value={editing.scaleMax !== undefined && !Number.isNaN(editing.scaleMax) ? String(editing.scaleMax) : ''}
+                onChange={(e) => {
+                  const v = e.target.value.trim()
+                  setEditing({ ...editing, scaleMax: v === '' ? undefined : parseFloat(v) })
+                }}
+              />
+            </span>
+          </label>
+          <label>
+            thresholdMin / Max
+            <span className="inline-pair">
+              <input
+                placeholder="min"
+                value={
+                  editing.thresholdMin !== undefined && !Number.isNaN(editing.thresholdMin)
+                    ? String(editing.thresholdMin)
+                    : ''
+                }
+                onChange={(e) => {
+                  const v = e.target.value.trim()
+                  setEditing({ ...editing, thresholdMin: v === '' ? undefined : parseFloat(v) })
+                }}
+              />
+              <input
+                placeholder="max"
+                value={
+                  editing.thresholdMax !== undefined && !Number.isNaN(editing.thresholdMax)
+                    ? String(editing.thresholdMax)
+                    : ''
+                }
+                onChange={(e) => {
+                  const v = e.target.value.trim()
+                  setEditing({ ...editing, thresholdMax: v === '' ? undefined : parseFloat(v) })
+                }}
+              />
+            </span>
+          </label>
           <div className="btn-row">
             <button type="submit" className="btn primary">
               Зберегти
@@ -192,20 +279,21 @@ export function CriteriaPanel({ onChanged }: { onChanged?: () => void }) {
               <th>Назва</th>
               <th>Тип</th>
               <th>Вага</th>
+              <th>Пороги / шкала</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             {loading && (
               <tr>
-                <td colSpan={4} className="muted">
+                <td colSpan={5} className="muted">
                   Завантаження…
                 </td>
               </tr>
             )}
             {!loading && items.length === 0 && (
               <tr>
-                <td colSpan={4} className="muted">
+                <td colSpan={5} className="muted">
                   Додайте критерії.
                 </td>
               </tr>
@@ -217,6 +305,9 @@ export function CriteriaPanel({ onChanged }: { onChanged?: () => void }) {
                   <span className="tag">{c.type === 'maximize' ? 'max' : 'min'}</span>
                 </td>
                 <td>{c.weight ?? 1}</td>
+                <td className="muted small">
+                  {c.thresholdMin ?? '—'}…{c.thresholdMax ?? '—'} | {c.scaleMin ?? '—'}…{c.scaleMax ?? '—'}
+                </td>
                 <td className="actions">
                   <button type="button" className="btn sm" onClick={() => setEditing({ ...c, weight: c.weight ?? 1 })}>
                     Змінити

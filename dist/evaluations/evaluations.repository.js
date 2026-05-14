@@ -44,6 +44,13 @@ let EvaluationsRepository = class EvaluationsRepository {
             .populate('criterionId', 'name type description')
             .exec();
     }
+    async upsertByPair(alternativeId, criterionId, value) {
+        return this.evaluationModel
+            .findOneAndUpdate({ alternativeId, criterionId }, { $set: { alternativeId, criterionId, value } }, { upsert: true, new: true, setDefaultsOnInsert: true })
+            .populate('alternativeId', 'name description')
+            .populate('criterionId', 'name type description')
+            .exec();
+    }
 };
 exports.EvaluationsRepository = EvaluationsRepository;
 exports.EvaluationsRepository = EvaluationsRepository = __decorate([

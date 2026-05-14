@@ -38,6 +38,30 @@ __decorate([
     (0, class_validator_1.Max)(1_000_000),
     __metadata("design:type", Number)
 ], CreateCriterionDto.prototype, "weight", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], CreateCriterionDto.prototype, "scaleMin", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], CreateCriterionDto.prototype, "scaleMax", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], CreateCriterionDto.prototype, "thresholdMin", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], CreateCriterionDto.prototype, "thresholdMax", void 0);
 class UpdateCriterionDto {
 }
 exports.UpdateCriterionDto = UpdateCriterionDto;
@@ -64,4 +88,28 @@ __decorate([
     (0, class_validator_1.Max)(1_000_000),
     __metadata("design:type", Number)
 ], UpdateCriterionDto.prototype, "weight", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], UpdateCriterionDto.prototype, "scaleMin", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], UpdateCriterionDto.prototype, "scaleMax", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], UpdateCriterionDto.prototype, "thresholdMin", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], UpdateCriterionDto.prototype, "thresholdMax", void 0);
 //# sourceMappingURL=criterion.dto.js.map

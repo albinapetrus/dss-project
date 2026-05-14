@@ -13,12 +13,14 @@ const analytics_controller_1 = require("./analytics.controller");
 const alternatives_module_1 = require("../alternatives/alternatives.module");
 const criteria_module_1 = require("../criteria/criteria.module");
 const evaluations_module_1 = require("../evaluations/evaluations.module");
+const rules_module_1 = require("../rules/rules.module");
+const scenarios_module_1 = require("../scenarios/scenarios.module");
 let AnalyticsModule = class AnalyticsModule {
 };
 exports.AnalyticsModule = AnalyticsModule;
 exports.AnalyticsModule = AnalyticsModule = __decorate([
     (0, common_1.Module)({
-        imports: [alternatives_module_1.AlternativesModule, criteria_module_1.CriteriaModule, evaluations_module_1.EvaluationsModule],
+        imports: [alternatives_module_1.AlternativesModule, criteria_module_1.CriteriaModule, evaluations_module_1.EvaluationsModule, rules_module_1.RulesModule, scenarios_module_1.ScenariosModule],
         providers: [analytics_service_1.AnalyticsService],
         controllers: [analytics_controller_1.AnalyticsController],
         exports: [analytics_service_1.AnalyticsService],

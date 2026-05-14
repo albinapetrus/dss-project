@@ -13,6 +13,9 @@ const alternatives_module_1 = require("./alternatives/alternatives.module");
 const criteria_module_1 = require("./criteria/criteria.module");
 const evaluations_module_1 = require("./evaluations/evaluations.module");
 const analytics_module_1 = require("./analytics/analytics.module");
+const rules_module_1 = require("./rules/rules.module");
+const scenarios_module_1 = require("./scenarios/scenarios.module");
+const import_module_1 = require("./import/import.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -23,6 +26,9 @@ exports.AppModule = AppModule = __decorate([
             alternatives_module_1.AlternativesModule,
             criteria_module_1.CriteriaModule,
             evaluations_module_1.EvaluationsModule,
+            rules_module_1.RulesModule,
+            scenarios_module_1.ScenariosModule,
+            import_module_1.ImportModule,
             analytics_module_1.AnalyticsModule,
         ],
     })

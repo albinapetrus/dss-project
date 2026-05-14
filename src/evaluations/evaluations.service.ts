@@ -25,4 +25,8 @@ export class EvaluationsService {
     if (!updated) throw new NotFoundException(`Evaluation #${id} not found`);
     return updated;
   }
+
+  async upsertPair(alternativeId: string, criterionId: string, value: number) {
+    return this.repo.upsertByPair(alternativeId, criterionId, value);
+  }
 }

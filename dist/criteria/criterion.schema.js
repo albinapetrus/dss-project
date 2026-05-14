@@ -35,6 +35,22 @@ __decorate([
     (0, mongoose_1.Prop)({ type: Number, default: 1, min: 0.0001 }),
     __metadata("design:type", Number)
 ], Criterion.prototype, "weight", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: Number, required: false }),
+    __metadata("design:type", Number)
+], Criterion.prototype, "scaleMin", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: Number, required: false }),
+    __metadata("design:type", Number)
+], Criterion.prototype, "scaleMax", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: Number, required: false }),
+    __metadata("design:type", Number)
+], Criterion.prototype, "thresholdMin", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: Number, required: false }),
+    __metadata("design:type", Number)
+], Criterion.prototype, "thresholdMax", void 0);
 exports.Criterion = Criterion = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true, collection: 'criteria' })
 ], Criterion);

@@ -1,6 +1,16 @@
 export type CriterionType = 'maximize' | 'minimize'
 
+/** Legacy для зворотної сумісності з ?strategy= */
 export type RankingStrategy = 'weighted_minmax' | 'equal_minmax'
+
+export type FoldMethod = 'additive' | 'cautious_min' | 'multiplicative'
+export type WeightMode = 'weighted' | 'equal'
+
+export type ExpertConsensusMethod = 'algebraic_mean' | 'median' | 'geometric_mean'
+export type CriterionVotingMethod = 'mean_rank' | 'borda' | 'median_rank' | 'reciprocal_rank'
+
+export type RuleOperator = 'gt' | 'gte' | 'lt' | 'lte' | 'eq'
+export type RuleAction = 'exclude_alternative' | 'score_penalty'
 
 export interface Alternative {
   _id: string
@@ -14,6 +24,10 @@ export interface Criterion {
   type: CriterionType
   description?: string
   weight?: number
+  scaleMin?: number
+  scaleMax?: number
+  thresholdMin?: number
+  thresholdMax?: number
 }
 
 export interface PopulatedRef {
@@ -52,6 +66,10 @@ export interface EvaluationMatrix {
     type: CriterionType
     description?: string
     weight: number
+    scaleMin?: number
+    scaleMax?: number
+    thresholdMin?: number
+    thresholdMax?: number
   }[]
   rows: MatrixRow[]
   stats: {
@@ -71,7 +89,10 @@ export interface RankingEntry {
 }
 
 export interface RankingsResponse {
-  strategy: RankingStrategy
+  fold?: FoldMethod
+  weightMode?: WeightMode
+  scenarioId?: string | null
+  strategy?: RankingStrategy
   method: string
   howToRead?: string
   message?: string
@@ -88,6 +109,9 @@ export interface RankingsResponse {
       normalized: number
       shareOfWeightedSumPercent: number
     }[]
+    thresholdExcluded?: { alternativeId: string; alternativeName: string; reason: string }[]
+    ruleExcluded?: { alternativeId: string; alternativeName: string; ruleName: string }[]
+    appliedPenaltyRuleNames?: string[]
   } | null
   detail?: {
     alternativeId: string
@@ -96,4 +120,27 @@ export interface RankingsResponse {
     normalizedByCriterion: Record<string, { raw: number; normalized: number }>
   }[]
   matrix?: EvaluationMatrix
+  thresholdExcluded?: { alternativeId: string; alternativeName: string; reason: string }[]
+  ruleExcluded?: { alternativeId: string; alternativeName: string; ruleName: string }[]
+  appliedPenaltyRuleNames?: string[]
+}
+
+export interface ExpertRule {
+  _id: string
+  name: string
+  enabled: boolean
+  criterionId: string
+  operator: RuleOperator
+  thresholdValue: number
+  action: RuleAction
+  penaltyPercent?: number
+}
+
+export interface Scenario {
+  _id: string
+  name: string
+  description?: string
+  weightOverrides?: Record<string, number>
+  evaluationOverrides?: Record<string, number>
+  thresholdOverrides?: Record<string, { min?: number; max?: number }>
 }

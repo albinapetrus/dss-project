@@ -4,6 +4,9 @@ import { AlternativesModule } from './alternatives/alternatives.module';
 import { CriteriaModule } from './criteria/criteria.module';
 import { EvaluationsModule } from './evaluations/evaluations.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { RulesModule } from './rules/rules.module';
+import { ScenariosModule } from './scenarios/scenarios.module';
+import { ImportModule } from './import/import.module';
 
 @Module({
   imports: [
@@ -11,6 +14,9 @@ import { AnalyticsModule } from './analytics/analytics.module';
     AlternativesModule,
     CriteriaModule,
     EvaluationsModule,
+    RulesModule,
+    ScenariosModule,
+    ImportModule,
     AnalyticsModule,
   ],
 })
