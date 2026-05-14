@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ExpertRule, ExpertRuleSchema } from './expert-rule.schema';
 import { RulesRepository } from './rules.repository';
@@ -11,4 +11,8 @@ import { RulesController } from './rules.controller';
   controllers: [RulesController],
   exports: [RulesService],
 })
-export class RulesModule {}
+export class RulesModule implements OnModuleInit {
+  onModuleInit() {
+    console.log('[DSS] RulesModule OK — маршрут GET /api/v1/rules зареєстровано');
+  }
+}

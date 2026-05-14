@@ -14,10 +14,18 @@ function normalizeHeader(h: string): string {
   return h.trim().toLowerCase().replace(/\s+/g, '')
 }
 
+function sanitizeCell(s: string): string {
+  return String(s)
+    .replace(/^\uFEFF/, '')
+    .replace(/\u00A0/g, ' ')
+    .trim()
+    .replace(/^["'\u201C\u201D]+|["'\u201C\u201D]+$/g, '')
+}
+
 function pick(row: Record<string, string>, ...keys: string[]): string {
   for (const k of keys) {
     const v = row[k]
-    if (v !== undefined && v !== '') return String(v).trim()
+    if (v !== undefined && v !== '') return sanitizeCell(String(v))
   }
   return ''
 }
@@ -28,7 +36,7 @@ function mapRow(record: Record<string, string>): Row | null {
   const alternativeKey = pick(h, 'alternativekey', 'альтернатива', 'alternative', 'a', 'alt')
   const criterionKey = pick(h, 'criterionkey', 'критерій', 'criterion', 'c')
   const valueStr = pick(h, 'value', 'значення', 'val', 'бал')
-  const value = parseFloat(valueStr.replace(',', '.'))
+  const value = parseFloat(sanitizeCell(valueStr).replace(',', '.'))
   if (!alternativeKey || !criterionKey || Number.isNaN(value)) return null
   return {
     expertKey: expertKey || 'default',
@@ -78,7 +86,29 @@ export function ExpertisePanel({ onChanged }: { onChanged?: () => void }) {
       setDone(`Оновлено пар: ${(res as { pairsUpdated: number }).pairsUpdated}`)
       onChanged?.()
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : 'Помилка імпорту')
+      if (e instanceof ApiError && e.status === 400) {
+        const b = e.body as {
+          message?: string
+          unresolved?: string[]
+          availableAlternatives?: string[]
+          availableCriteria?: string[]
+        }
+        const extra =
+          Array.isArray(b.unresolved) && b.unresolved.length
+            ? `\nНевідомі пари: ${b.unresolved.slice(0, 15).join('; ')}${b.unresolved.length > 15 ? '…' : ''}`
+            : ''
+        const alts =
+          Array.isArray(b.availableAlternatives) && b.availableAlternatives.length
+            ? `\n\nУ базі зараз альтернативи:\n${b.availableAlternatives.map((x) => `• ${x}`).join('\n')}`
+            : '\n\nУ базі немає жодної альтернативи — спочатку додайте їх на вкладці «Модель і дані».'
+        const crits =
+          Array.isArray(b.availableCriteria) && b.availableCriteria.length
+            ? `\nКритерії в базі:\n${b.availableCriteria.map((x) => `• ${x}`).join('\n')}`
+            : '\nКритеріїв у базі немає — додайте на вкладці «Модель і дані».'
+        setError(`${e.message}${extra}${alts}${crits}`)
+      } else {
+        setError(e instanceof ApiError ? e.message : 'Помилка імпорту')
+      }
     } finally {
       setLoading(false)
     }
@@ -89,10 +119,16 @@ export function ExpertisePanel({ onChanged }: { onChanged?: () => void }) {
       <h2>Експертиза</h2>
       <p className="muted">
         Імпорт CSV з Google Таблиць: колонки <strong>expertKey</strong>, <strong>alternativeKey</strong>,{' '}
-        <strong>criterionKey</strong>, <strong>value</strong> (назви альтернатив і критеріїв як у системі).
-        Узгодження кількох експертів у одну оцінку на комірку.
+        <strong>criterionKey</strong>, <strong>value</strong>. Назви <strong>альтернатив і критеріїв мають
+        збігатися</strong> з тими, що на вкладках «Альтернативи» та «Критерії» (регістр не важливий). Якщо в БД
+        після seed — Shopify / WooCommerce, а у файлі Магазин А — буде помилка, доки не додасте такі сутності
+        або не зміните назви в CSV.
       </p>
-      {error && <div className="banner error">{error}</div>}
+      {error && (
+        <div className="banner error" style={{ whiteSpace: 'pre-wrap' }}>
+          {error}
+        </div>
+      )}
       {done && <div className="banner warn">{done}</div>}
 
       <div className="card form-row">

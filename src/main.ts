@@ -20,7 +20,8 @@ async function bootstrap() {
   );
   app.setGlobalPrefix('api/v1');
 
-  await app.listen(3000);
-  console.log('DSS Core Framework running on http://localhost:3000/api/v1');
+  const port = Number(process.env.PORT) || 3000;
+  await app.listen(port);
+  console.log(`DSS Core Framework on http://localhost:${port}/api/v1 — перевірка: GET /api/v1/health та GET /api/v1/rules`);
 }
 bootstrap();

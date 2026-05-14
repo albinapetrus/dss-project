@@ -2,11 +2,13 @@
   "name": "dss-core",
   "version": "1.0.0",
   "description": "Decision Support System Core Framework",
+  "main": "dist/main.js",
   "scripts": {
-    "build": "nest build",
+    "clean": "node -e \"const fs=require('fs'); try{fs.rmSync('dist',{recursive:true,force:true})}catch(e){} try{fs.unlinkSync('tsconfig.tsbuildinfo')}catch(e){}\"",
+    "build": "npm run clean && nest build",
     "start": "nest start",
     "start:dev": "nest start --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/main.js",
     "seed": "ts-node scripts/seed.ts"
   },
   "dependencies": {

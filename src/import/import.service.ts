@@ -10,7 +10,13 @@ import {
 } from './dto/import.dto';
 
 function normKey(s: string): string {
-  return s.trim().toLowerCase();
+  if (s == null || typeof s !== 'string') return '';
+  return s
+    .replace(/^\uFEFF/, '')
+    .replace(/\u00A0/g, ' ')
+    .trim()
+    .replace(/^["'\s]+|["'\s]+$/g, '')
+    .toLowerCase();
 }
 
 function algebraicMean(values: number[]): number {
@@ -69,6 +75,8 @@ export class ImportService {
       throw new BadRequestException({
         message: 'Невідомі назви альтернатив або критеріїв.',
         unresolved: [...new Set(unresolved)].slice(0, 50),
+        availableAlternatives: alts.map((a) => a.name),
+        availableCriteria: crits.map((c) => c.name),
       });
     }
 

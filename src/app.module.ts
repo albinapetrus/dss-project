@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { HealthController } from './health.controller';
 import { AlternativesModule } from './alternatives/alternatives.module';
 import { CriteriaModule } from './criteria/criteria.module';
 import { EvaluationsModule } from './evaluations/evaluations.module';
@@ -19,5 +20,6 @@ import { ImportModule } from './import/import.module';
     ImportModule,
     AnalyticsModule,
   ],
+  controllers: [HealthController],
 })
 export class AppModule {}
